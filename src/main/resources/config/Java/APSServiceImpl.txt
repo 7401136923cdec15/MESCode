@@ -1,0 +1,97 @@
+package $packageName.serviceimpl;
+
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.stereotype.Service;
+
+import $packageName.service.$qianzuiService;
+import $packageName.service.po.ServiceResult;
+import $packageName.service.po.$xxqianzui.$ClassName;
+import $packageName.serviceimpl.dao.$xxqianzui.$ClassNameDAO;
+
+/**
+ * 
+ * @author PengYouWang
+ * @CreateTime 2019年12月27日12:46:35
+ * @LastEditTime 2019年12月27日16:23:56
+ *
+ */
+@Service
+public class $qianzuiServiceImpl implements $qianzuiService {
+
+	/**
+	 * ID查询
+	 */
+	@Override
+	public ServiceResult<$ClassName> $qianzui_Query$leiming(BMSEmployee wLoginUser,int wID,OutResult<Integer> wErrorCode) {
+		ServiceResult<$ClassName> wResult = new ServiceResult<$ClassName>();
+		try {
+			wResult.Result = $ClassNameDAO.getInstance().SelectByID(wLoginUser,wID,wErrorCode);
+			wResult.setFaultCode(MESException.getEnumType(wErrorCode.Result).getLable());
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return wResult;
+	}
+
+	/**
+	 * 条件查询
+	 */
+	@Override
+	public ServiceResult<List<$ClassName>> $qianzui_Query$leimingList(BMSEmployee wLoginUser,$QueryParms,OutResult<Integer> wErrorCode) {
+		ServiceResult<List<$ClassName>> wResult = new ServiceResult<List<$ClassName>>();
+		try {
+			wResult.Result = $ClassNameDAO.getInstance().SelectList(wLoginUser,$canshu,wErrorCode);
+			wResult.setFaultCode(MESException.getEnumType(wErrorCode.Result).getLable());
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return wResult;
+	}
+
+	/**
+	 * 更新或修改
+	 */
+	@Override
+	public ServiceResult<$keyType> $qianzui_Update$leiming(BMSEmployee wLoginUser,$ClassName w$ClassName,OutResult<Integer> wErrorCode) {
+		ServiceResult<Long> wResult = new ServiceResult<Long>();
+		try {
+			wResult.Result = $ClassNameDAO.getInstance().Update(wLoginUser,w$ClassName,wErrorCode);
+			wResult.setFaultCode(MESException.getEnumType(wErrorCode.Result).getLable());
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return wResult;
+	}
+
+	/**
+	 * 批量激活或禁用
+	 */
+	@Override
+	public ServiceResult<Integer> $qianzui_Active$leimingList(BMSEmployee wLoginUser,List<Integer> wIDList, int wActive,OutResult<Integer> wErrorCode) {
+		ServiceResult<Integer> wResult=new ServiceResult<Integer>(0);
+		try {
+			$ClassNameDAO.getInstance().Active(wLoginUser,wIDList, wActive,wErrorCode);
+			wResult.setFaultCode(MESException.getEnumType(wErrorCode.Result).getLable());
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return wResult;
+	}
+
+	private static Logger logger = LoggerFactory.getLogger($qianzuiServiceImpl.class);
+
+	public $qianzuiServiceImpl() {
+	}
+
+	private static $qianzuiService Instance;
+
+	public static $qianzuiService getInstance() {
+		if (Instance == null)
+			Instance = new $qianzuiServiceImpl();
+		return Instance;
+	}
+}

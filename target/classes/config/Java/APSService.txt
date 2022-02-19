@@ -1,0 +1,44 @@
+package $packageName.service;
+
+import java.util.List;
+
+import $packageName.service.po.ServiceResult;
+import $packageName.service.po.$xxqianzui.$ClassName;
+
+/**
+ * 
+ * @author PengYouWang
+ * @CreateTime 2019年12月27日16:16:33
+ * @LastEditTime 2019年12月27日20:12:20
+ *
+ */
+public interface $qianzuiService {
+
+	/**
+	 * 根据ID查询
+	 * 
+	 * @return
+	 */
+	ServiceResult<$ClassName> $qianzui_Query$leiming(BMSEmployee wLoginUser,int wID, OutResult<Integer> wErrorCode);
+
+	/**
+	 * 条件查询
+	 * 
+	 * @return
+	 */
+	ServiceResult<List<$ClassName>> $qianzui_Query$leimingList(BMSEmployee wLoginUser,$QueryParms, OutResult<Integer> wErrorCode);
+
+	/**
+	 * 新增或修改
+	 * 
+	 * @return
+	 */
+	ServiceResult<$keyType> $qianzui_Update$leiming(BMSEmployee wLoginUser,$ClassName w$ClassName, OutResult<Integer> wErrorCode);
+
+	/**
+	 * 激活或禁用
+	 * 
+	 * @return
+	 */
+	ServiceResult<Integer> $qianzui_Active$leimingList(BMSEmployee wLoginUser,List<Integer> wIDList, int wActive, OutResult<Integer> wErrorCode);
+}

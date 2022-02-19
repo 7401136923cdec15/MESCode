@@ -1,0 +1,224 @@
+package $packageName.serviceimpl.dao.$xxqianzui;
+
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+
+import $packageName.service.mesenum.MESDBSource;
+import $packageName.service.mesenum.MESException;
+import $packageName.service.po.OutResult;
+import $packageName.service.po.ServiceResult;
+import $packageName.service.po.$xxqianzui.$ClassName;
+import $packageName.service.po.bms.BMSEmployee;
+import $packageName.service.utils.StringUtils;
+import $packageName.serviceimpl.dao.BaseDAO;
+
+public class $ClassNameDAO extends BaseDAO {
+
+	private static Logger logger = LoggerFactory.getLogger($ClassNameDAO.class);
+
+	private static $ClassNameDAO Instance = null;
+
+	/**
+	 * 添加或修改
+	 * 
+	 * @param w$ClassName
+	 * @return
+	 */
+	public $keyType Update(BMSEmployee wLoginUser,$ClassName w$ClassName, OutResult<Integer> wErrorCode) {
+		$keyType wResult = 0;
+		try {
+			ServiceResult<String> wInstance = this.GetDataBaseName(wLoginUser.getCompanyID(), MESDBSource.APS,
+					wLoginUser.getID(), 0);
+			wErrorCode.set(wInstance.ErrorCode);
+			if (wErrorCode.Result != 0) {
+				return wResult;
+			}
+
+			if (w$ClassName == null)
+				return 0;
+
+			String wSQL = "";
+			if (w$ClassName.getID() <= 0) {
+				wSQL = MessageFormat.format("$InsertSql",
+						wInstance.Result);
+			} else {
+				wSQL = MessageFormat.format("$UpdateSql",
+						wInstance.Result);
+			}
+
+			wSQL = this.DMLChange(wSQL);
+
+			Map<String, Object> wParamMap = new HashMap<String, Object>();
+
+			$UpdateMapPut
+
+			KeyHolder keyHolder = new GeneratedKeyHolder();
+			SqlParameterSource wSqlParameterSource = new MapSqlParameterSource(wParamMap);
+
+			nameJdbcTemplate.update(wSQL, wSqlParameterSource, keyHolder);
+
+			if (w$ClassName.getID() <= 0) {
+				wResult = keyHolder.getKey().intValue();
+				w$ClassName.setID(wResult);
+			} else {
+				wResult = w$ClassName.getID();
+			}
+		} catch (Exception ex) {
+			wErrorCode.set(MESException.DBSQL.getValue());
+			logger.error(ex.toString());
+		}
+		return wResult;
+	}
+
+	/**
+	 * 删除集合
+	 * 
+	 * @param wList
+	 */
+	public ServiceResult<Integer> DeleteList(BMSEmployee wLoginUser,List<$ClassName> wList,OutResult<Integer> wErrorCode) {
+		ServiceResult<Integer> wResult=new ServiceResult<Integer>(0);
+		try {
+			ServiceResult<String> wInstance = this.GetDataBaseName(wLoginUser.getCompanyID(), MESDBSource.APS,
+					wLoginUser.getID(), 0);
+			wErrorCode.set(wInstance.ErrorCode);
+			if (wErrorCode.Result != 0) {
+				return wResult;
+			}
+
+			if (wList == null || wList.size() <= 0)
+				return wResult;
+
+			List<String> wIDList = new ArrayList<String>();
+			for ($ClassName wItem : wList) {
+				wIDList.add(String.valueOf(wItem.ID));
+			}
+			String wSql = MessageFormat.format("delete from {1}.$TableName WHERE ID IN({0}) ;",
+					String.join(",", wIDList),wInstance.Result);
+			this.ExecuteSqlTransaction(wSql);
+		} catch (Exception ex) {
+			wErrorCode.set(MESException.DBSQL.getValue());
+			logger.error(ex.toString());
+		}
+		return wResult;
+	}
+
+	/**
+	 * 查单条
+	 * 
+	 * @return
+	 */
+	public $ClassName SelectByID(BMSEmployee wLoginUser,int wID,OutResult<Integer> wErrorCode) {
+		$ClassName wResult = new $ClassName();
+		try {
+			ServiceResult<String> wInstance = this.GetDataBaseName(wLoginUser.getCompanyID(), MESDBSource.APS,
+					wLoginUser.getID(), 0);
+			wErrorCode.set(wInstance.ErrorCode);
+			if (wErrorCode.Result != 0) {
+				return wResult;
+			}
+
+			List<$ClassName> wList = SelectList(wLoginUser,wID, $DefaultSelectValue,wErrorCode);
+			if (wList == null || wList.size() != 1)
+				return wResult;
+			wResult = wList.get(0);
+		} catch (Exception e) {
+			wErrorCode.set(MESException.DBSQL.getValue());
+			logger.error(e.toString());
+		}
+		return wResult;
+	}
+
+	/**
+	 * 条件查询集合
+	 * 
+	 * @return
+	 */
+	public List<$ClassName> SelectList(BMSEmployee wLoginUser, $QueryParms, OutResult<Integer> wErrorCode) {
+		List<$ClassName> wResultList = new ArrayList<$ClassName>();
+		try {
+			ServiceResult<String> wInstance = this.GetDataBaseName(wLoginUser.getCompanyID(), MESDBSource.APS,
+					wLoginUser.getID(), 0);
+			wErrorCode.set(wInstance.ErrorCode);
+			if (wErrorCode.Result != 0) {
+				return wResultList;
+			}
+
+			String wSQL = MessageFormat.format(
+					"$QuerySql",
+					wInstance.Result,wStateIDList.size() > 0 ? StringUtils.Join(",", wStateIDList) : "0");
+
+			Map<String, Object> wParamMap = new HashMap<String, Object>();
+
+			$QueryMapPut
+
+			wSQL = this.DMLChange(wSQL);
+
+			List<Map<String, Object>> wQueryResult = nameJdbcTemplate.queryForList(wSQL, wParamMap);
+
+			for (Map<String, Object> wReader : wQueryResult) {
+				$ClassName wItem = new $ClassName();
+
+				$QueryGet
+				
+				wResultList.add(wItem);
+			}
+		} catch (Exception ex) {
+			wErrorCode.set(MESException.DBSQL.getValue());
+			logger.error(ex.toString());
+		}
+		return wResultList;
+	}
+
+	/**
+	 * 批量激活或禁用
+	 */
+	public ServiceResult<Integer> Active(BMSEmployee wLoginUser,List<Integer> wIDList, int wActive, OutResult<Integer> wErrorCode) {
+		ServiceResult<Integer> wResult=new  ServiceResult<Integer>(0);
+		try {
+			ServiceResult<String> wInstance = this.GetDataBaseName(wLoginUser.getCompanyID(), MESDBSource.APS,
+					wLoginUser.getID(), 0);
+			wErrorCode.set(wInstance.ErrorCode);
+			if (wErrorCode.Result != 0) {
+				return wResult;
+			}
+
+			if (wIDList == null || wIDList.size() <= 0)
+				return wResult;
+			if (wActive != 0 && wActive != 1)
+				return wResult;
+			for (Integer wItem : wIDList) {
+				$ClassName w$ClassName = SelectByID(wLoginUser,wItem,wErrorCode);
+				if (w$ClassName == null || w$ClassName.ID <= 0)
+					continue;
+				w$ClassName.Active = wActive;
+				long wID = Update(wLoginUser,w$ClassName,wErrorCode);
+				if (wID <= 0)
+					break;
+			}
+		} catch (Exception e) {
+			wErrorCode.set(MESException.DBSQL.getValue());
+			logger.error(e.toString());
+		}
+		return wResult;
+	}
+
+	private $ClassNameDAO() {
+		super();
+	}
+
+	public static $ClassNameDAO getInstance() {
+		if (Instance == null)
+			Instance = new $ClassNameDAO();
+		return Instance;
+	}
+}
